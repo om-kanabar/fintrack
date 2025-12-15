@@ -1,3 +1,4 @@
+alert("JS LOADED FROM DOMAIN");
 // Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
 import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
