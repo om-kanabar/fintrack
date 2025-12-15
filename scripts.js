@@ -1,16 +1,16 @@
-alert("JS LOADED FROM DOMAIN");
 // Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
 import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
 // Firebase project config
-  apiKey: "AIzaSyD4LF3rVTE4jKzf5lh6UII8SlsifRd2GEw",
-  authDomain: "fintrack-ec50a.firebaseapp.com",
-  projectId: "fintrack-ec50a",
-  storageBucket: "fintrack-ec50a.firebasestorage.app",
-  messagingSenderId: "1286389410",
-  appId: "1:1286389410:web:cb45ddaf8f75128cef21fb",
-  measurementId: "G-BW0G8MP2NN"
+const firebaseConfig = {
+    apiKey: "AIzaSyD4LF3rVTE4jKzf5lh6UII8SlsifRd2GEw",
+    authDomain: "fintrack-ec50a.firebaseapp.com",
+    projectId: "fintrack-ec50a",
+    storageBucket: "fintrack-ec50a.firebasestorage.app",
+    messagingSenderId: "1286389410",
+    appId: "1:1286389410:web:cb45ddaf8f75128cef21fb",
+    measurementId: "G-BW0G8MP2NN"
 };
 
 // Initialize Firebase
