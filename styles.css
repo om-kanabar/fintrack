@@ -1,0 +1,10 @@
+#table-box{
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.table{
+    width: 66.18033989vw;
+}
