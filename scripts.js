@@ -21,10 +21,11 @@ async function readExpenses() {
     const querySnapshot = await getDocs(collection(db, "expenses"));
     const tbody = document.querySelector("#table-box tbody");
     tbody.innerHTML = "";
+    document.getElementById("loading-box").classList.add("hidden");
     querySnapshot.forEach((doc) => {
         const data = doc.data();
         const tr = document.createElement("tr");
-        const indexTd = document.createElement("td");
+        const indexTd = document.createElement("th");
         indexTd.scope = "row";
         indexTd.innerHTML = tbody.children.length + 1;
 
