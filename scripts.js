@@ -21,7 +21,6 @@ async function readExpenses() {
     const querySnapshot = await getDocs(collection(db, "expenses"));
     const tbody = document.querySelector("#table-box tbody");
     tbody.innerHTML = "";
-    document.getElementById("loading-box").classList.add("hidden");
     querySnapshot.forEach((doc) => {
         const data = doc.data();
         const tr = document.createElement("tr");
