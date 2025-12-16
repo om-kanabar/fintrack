@@ -5,21 +5,6 @@
     justify-content: center;
 }
 
-#loading-box{
-    width: 100vw;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-}
-
-#loading-box p{
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-left: 1.5em;
-}
-
 .table{
     width: 66.18033989vw;
 }
