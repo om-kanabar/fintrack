@@ -1,0 +1,7 @@
+.form-box{
+    width: 100vw;
+    margin-top: 10vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}

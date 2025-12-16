@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <link href="auth.css" rel="stylesheet" />
+    <script type="module" src="auth.js"></script>
+</head>
+<body class="bg-light">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <h1 class="text-center mt-5 mb-4">Create Account</h1>
+
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <form id="signup-form" novalidate>
+
+              <div class="mb-3">
+                <label for="UserEmail" class="form-label">Email address</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="UserEmail"
+                  placeholder="name@example.com"
+                  required
+                >
+                <div class="invalid-feedback">
+                  Please enter a valid email address.
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="Password" class="form-label">Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="Password"
+                  required
+                >
+                <div class="form-text">
+                  8-20 characters, letters, numbers, special characters.
+                  No spaces or emojis.
+                </div>
+                <div class="invalid-feedback">
+                  Password does not meet the required rules.
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="ConfirmPassword" class="form-label">Confirm Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="ConfirmPassword"
+                  required
+                >
+                <div class="invalid-feedback">
+                  Passwords do not match.
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100">
+                Create Account
+              </button>
+
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
