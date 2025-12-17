@@ -1,7 +1,21 @@
+html,
+body{
+    background-color: #fefcf7;
+}
+
 .form-box{
     width: 100vw;
     margin-top: 10vh;
     display: flex;
     flex-direction: row;
     justify-content: center;
+}
+
+.required{
+    color: rgb(219, 53, 53);
+    font-size: 1.25em;
+}
+
+.form-box form{
+    width: 66.18033989vw;
 }

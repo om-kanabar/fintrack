@@ -1,6 +1,21 @@
-const form = document.getElementById("signup-form");
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
 
-form.addEventListener("submit", (e) => {
+const firebaseConfig = {
+    apiKey: "AIzaSyD4LF3rVTE4jKzf5lh6UII8SlsifRd2GEw",
+    authDomain: "fintrack-ec50a.firebaseapp.com",
+    projectId: "fintrack-ec50a",
+    storageBucket: "fintrack-ec50a.firebasestorage.app",
+    messagingSenderId: "1286389410",
+    appId: "1:1286389410:web:cb45ddaf8f75128cef21fb",
+    measurementId: "G-BW0G8MP2NN"
+};
+
+const form = document.getElementById("signup-form");
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const emailInput = document.getElementById("UserEmail");
@@ -59,5 +74,7 @@ form.addEventListener("submit", (e) => {
 
     if (!valid) return;
 
-    // Firebase auth will go here next
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    console.log("Signed up user UID:", cred.user.uid);
+    window.location.href = "/app.html";
 });
