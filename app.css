@@ -1,12 +1,19 @@
-#table-box{
+.table-box, #form-box{
     width: 100vw;
     display: flex;
     flex-direction: row;
     justify-content: center;
 }
 
-.table{
+.table, form{
     width: 66.18033989vw;
+}
+
+#item-form{
+    width: 66.18033989vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 .hidden{

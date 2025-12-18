@@ -10,41 +10,210 @@
 </head>
 <body>
     <h1 class="mt-4 mb-5" style="text-align: center;">Fintrack</h1>
-    <div id="form-box">
-        <form>
-            
+    <div id="form-box" class="container mt-5">
+        <form id="item-form" class="row g-3 needs-validation" novalidate>
+            <div class="col-md-3">
+                <label for="amount" class="form-label">Amount ($)</label>
+                <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input id="amount" type="number" class="form-control" placeholder="0.00" step="0.01" min="0" required>
+                    <div class="invalid-feedback">
+                        Please enter a positive dollar amount.
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label for="item" class="form-label">Item</label>
+                <input id="item" type="text" class="form-control" placeholder="Enter item name" required>
+                <div class="invalid-feedback">
+                    Please enter an item name.
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label for="date" class="form-label">Date</label>
+                <input id="date" type="date" class="form-control" value="" required>
+                <div class="invalid-feedback">
+                    Please enter a date that is in this month or before.
+                </div>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">Add</button>
+            </div>
         </form>
     </div>
-    <div id="table-box" class="mt-5">
-        <table class="table table-striped table-hover">
-            <thead>
-                <th scope="col">#</th>
-                <th scope="col">Amount ($)</th>
-                <th scope="col">Item</th>
-            </thead>
-            <tbody>
-                <tr class="placeholder-glow">
-                    <td><span class="placeholder col-2"></span></td>
-                    <td><span class="placeholder col-1"></span></td>
-                    <td><span class="placeholder col-7"></span></td>
-                </tr>
-                <tr class="placeholder-glow">
-                    <td><span class="placeholder col-2"></span></td>
-                    <td><span class="placeholder col-1"></span></td>
-                    <td><span class="placeholder col-4"></span></td>
-                </tr>
-                <tr class="placeholder-glow">
-                    <td><span class="placeholder col-2"></span></td>
-                    <td><span class="placeholder col-1"></span></td>
-                    <td><span class="placeholder col-6"></span></td>
-                </tr>
-                <tr class="placeholder-glow">
-                    <td><span class="placeholder col-2"></span></td>
-                    <td><span class="placeholder col-1"></span></td>
-                    <td><span class="placeholder col-9"></span></td>
-                </tr>
-            </tbody>
-        </table>
+    <div>
+        <h1 class="text-center mt-5" id="table1head"><div class="placeholder-glow"><span class="placeholder col-4"></span></div></h1>
+        <div class="mt-1 table-box">
+            <table id="table1" class="table table-striped table-hover">
+                <thead>
+                    <th scope="col">#</th>
+                    <th scope="col">Amount ($)</th>
+                    <th scope="col">Item</th>
+                    <th scope="col">Date</th>
+                </thead>
+                <tbody id="table1body">
+                    <tr class="placeholder-glow">
+                        <td><span class="placeholder col-2"></span></td>
+                        <td><span class="placeholder col-1"></span></td>
+                        <td><span class="placeholder col-7"></span></td>
+                        <td><span class="placeholder col-5"></span></td>
+                    </tr>
+                    <tr class="placeholder-glow">
+                        <td><span class="placeholder col-2"></span></td>
+                        <td><span class="placeholder col-1"></span></td>
+                        <td><span class="placeholder col-4"></span></td>
+                        <td><span class="placeholder col-5"></span></td>
+                    </tr>
+                    <tr class="placeholder-glow">
+                        <td><span class="placeholder col-2"></span></td>
+                        <td><span class="placeholder col-1"></span></td>
+                        <td><span class="placeholder col-6"></span></td>
+                        <td><span class="placeholder col-4"></span></td>
+                    </tr>
+                    <tr class="placeholder-glow">
+                        <td><span class="placeholder col-2"></span></td>
+                        <td><span class="placeholder col-1"></span></td>
+                        <td><span class="placeholder col-9"></span></td>
+                        <td><span class="placeholder col-4"></span></td>
+                    </tr>
+                    <tr class="placeholder-glow">
+                        <td><span class="placeholder col-2"></span></td>
+                        <td><span class="placeholder col-2"></span></td>
+                        <td><span class="placeholder col-5"></span></td>
+                        <td><span class="placeholder col-5"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <h1 class="text-center mt-5" id="table2head"><div class="placeholder-glow"><span class="placeholder col-3"></span></h1>
+        <div class="mt-1 table-box">
+            <table id="table2" class="table table-striped table-hover">
+                <thead>
+                    <th scope="col">#</th>
+                    <th scope="col">Amount ($)</th>
+                    <th scope="col">Item</th>
+                    <th scope="col">Date</th>
+                </thead>
+                <tbody id="table2body">
+                    <tr class="placeholder-glow">
+                        <td><span class="placeholder col-2"></span></td>
+                        <td><span class="placeholder col-1"></span></td>
+                        <td><span class="placeholder col-4"></span></td>
+                        <td><span class="placeholder col-5"></span></td>
+                    </tr>
+                    <tr class="placeholder-glow">
+                        <td><span class="placeholder col-2"></span></td>
+                        <td><span class="placeholder col-1"></span></td>
+                        <td><span class="placeholder col-7"></span></td>
+                        <td><span class="placeholder col-6"></span></td>
+                    </tr>
+                    <tr class="placeholder-glow">
+                        <td><span class="placeholder col-2"></span></td>
+                        <td><span class="placeholder col-1"></span></td>
+                        <td><span class="placeholder col-9"></span></td>
+                        <td><span class="placeholder col-4"></span></td>
+                    </tr>
+                    <tr class="placeholder-glow">
+                        <td><span class="placeholder col-2"></span></td>
+                        <td><span class="placeholder col-1"></span></td>
+                        <td><span class="placeholder col-5"></span></td>
+                        <td><span class="placeholder col-4"></span></td>
+                    </tr>
+                    <tr class="placeholder-glow">
+                        <td><span class="placeholder col-2"></span></td>
+                        <td><span class="placeholder col-2"></span></td>
+                        <td><span class="placeholder col-6"></span></td>
+                        <td><span class="placeholder col-3"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <h1 class="text-center mt-5" id="table3head"><div class="placeholder-glow"><span class="placeholder col-6"></span></h1>
+        <div class="mt-1 table-box">
+            <table id="table3" class="table table-striped table-hover">
+                <thead>
+                    <th scope="col">#</th>
+                    <th scope="col">Amount ($)</th>
+                    <th scope="col">Item</th>
+                    <th scope="col">Date</th>
+                </thead>
+                <tbody id="table3body">
+                    <tr class="placeholder-glow">
+                        <td><span class="placeholder col-2"></span></td>
+                        <td><span class="placeholder col-1"></span></td>
+                        <td><span class="placeholder col-7"></span></td>
+                        <td><span class="placeholder col-5"></span></td>
+                    </tr>
+                    <tr class="placeholder-glow">
+                        <td><span class="placeholder col-2"></span></td>
+                        <td><span class="placeholder col-1"></span></td>
+                        <td><span class="placeholder col-4"></span></td>
+                        <td><span class="placeholder col-5"></span></td>
+                    </tr>
+                    <tr class="placeholder-glow">
+                        <td><span class="placeholder col-2"></span></td>
+                        <td><span class="placeholder col-1"></span></td>
+                        <td><span class="placeholder col-6"></span></td>
+                        <td><span class="placeholder col-4"></span></td>
+                    </tr>
+                    <tr class="placeholder-glow">
+                        <td><span class="placeholder col-2"></span></td>
+                        <td><span class="placeholder col-1"></span></td>
+                        <td><span class="placeholder col-9"></span></td>
+                        <td><span class="placeholder col-4"></span></td>
+                    </tr>
+                    <tr class="placeholder-glow">
+                        <td><span class="placeholder col-2"></span></td>
+                        <td><span class="placeholder col-2"></span></td>
+                        <td><span class="placeholder col-5"></span></td>
+                        <td><span class="placeholder col-5"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <h1 class="text-center mt-5" id="table4head"><div class="placeholder-glow"><span class="placeholder col-5"></span></h1>
+        <div class="mt-1 table-box">
+            <table id="table4" class="table table-striped table-hover">
+                <thead>
+                    <th scope="col">#</th>
+                    <th scope="col">Amount ($)</th>
+                    <th scope="col">Item</th>
+                    <th scope="col">Date</th>
+                </thead>
+                <tbody id="table4body">
+                    <tr class="placeholder-glow">
+                        <td><span class="placeholder col-2"></span></td>
+                        <td><span class="placeholder col-1"></span></td>
+                        <td><span class="placeholder col-7"></span></td>
+                        <td><span class="placeholder col-5"></span></td>
+                    </tr>
+                    <tr class="placeholder-glow">
+                        <td><span class="placeholder col-2"></span></td>
+                        <td><span class="placeholder col-1"></span></td>
+                        <td><span class="placeholder col-4"></span></td>
+                        <td><span class="placeholder col-5"></span></td>
+                    </tr>
+                    <tr class="placeholder-glow">
+                        <td><span class="placeholder col-2"></span></td>
+                        <td><span class="placeholder col-1"></span></td>
+                        <td><span class="placeholder col-6"></span></td>
+                        <td><span class="placeholder col-4"></span></td>
+                    </tr>
+                    <tr class="placeholder-glow">
+                        <td><span class="placeholder col-2"></span></td>
+                        <td><span class="placeholder col-1"></span></td>
+                        <td><span class="placeholder col-9"></span></td>
+                        <td><span class="placeholder col-4"></span></td>
+                    </tr>
+                    <tr class="placeholder-glow">
+                        <td><span class="placeholder col-2"></span></td>
+                        <td><span class="placeholder col-2"></span></td>
+                        <td><span class="placeholder col-5"></span></td>
+                        <td><span class="placeholder col-5"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </body>
 </html>
