@@ -19,6 +19,10 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const today = new Date()
 
+const itemInput = document.getElementById("item");
+const amountInput = document.getElementById("amount");
+const dateInputElement = document.getElementById("date");
+
 const tables = {
     thisMonth: document.getElementById("table1body"),
     lastMonth: document.getElementById("table2body"),
@@ -47,33 +51,11 @@ onAuthStateChanged(auth, async (user) => {
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
-
-        const amountInput = document.getElementById("amount");
-        const itemInput = document.getElementById("item");
-        const dateInputElement = document.getElementById("date");
-
         const item = itemInput.value.trim();
         const amount = parseFloat(amountInput.value);
         const dateInput = dateInputElement.value;
 
-        // Validate amount
-        if (isNaN(amount) || amount <= 0) amountInput.setCustomValidity("invalid");
-        else amountInput.setCustomValidity("");
-
-        // Validate item
-        if (!item) itemInput.setCustomValidity("invalid");
-        else itemInput.setCustomValidity("");
-
-        // Validate date (monthDiff >= 0)
-        const [selectedYear, selectedMonth] = dateInput.split("-").map(Number);
-        const currentYear = today.getFullYear();
-        const currentMonth = today.getMonth(); // 0–11
-        const monthDiff = (currentYear - selectedYear) * 12 + (currentMonth - (selectedMonth - 1));
-        if (monthDiff < 0) dateInputElement.setCustomValidity("invalid");
-        else dateInputElement.setCustomValidity("");
-
-        // Trigger Bootstrap validation
-        form.classList.add("was-validated");
+        validation(form);
         if (!form.checkValidity()) return;
 
         // Add expense to Firestore
@@ -91,6 +73,8 @@ onAuthStateChanged(auth, async (user) => {
             createdAt: new Date()
         };
 
+
+
         // Clear form
         form.reset();
         form.classList.remove("was-validated");
@@ -100,6 +84,7 @@ onAuthStateChanged(auth, async (user) => {
         dateInputElement.value = dateChange();
     });
 });
+
 
 function redirect(locallink, weblink) {
     const hostname = window.location.hostname;
@@ -173,12 +158,8 @@ async function fillData(sortExpenses) {
     Object.values(tables).forEach(table => table.innerHTML = "");
 
     for (const expense of sortExpenses) {
-        const expenseDate = new Date(expense.date + "T00:00:00");
-        const expenseYear = expenseDate.getFullYear();
-        const expenseMonth = expenseDate.getMonth();
-
-        // Calculate difference in months between expense date and current date
-        const monthDiff = (thisYear - expenseYear) * 12 + (thisMonth - expenseMonth);
+        const expenseDate = parseYMD(expense.date);
+        const monthDiff = getMonthDiff(expenseDate);
 
         const targetTable = getTargetTable(monthDiff);
         addRowToTable(expense, targetTable);
@@ -189,6 +170,16 @@ async function fillData(sortExpenses) {
 function addRowToTable(expense, parent) {
     const data = expense;
     const tr = document.createElement("tr");
+    tr.setAttribute("data-date", data.date);
+    let dateObj;
+    if (expense.createdAt.toDate) {
+        dateObj = expense.createdAt.toDate();
+    } else {
+        dateObj = expense.createdAt;
+    }
+    const timestamp = dateObj.getTime();
+    tr.setAttribute("data-time", timestamp.toString());
+    tr.setAttribute("id", data.id);
     const date = data.date
     ? new Date(data.date + "T00:00:00").toLocaleDateString("en-US")
     : "";
@@ -201,13 +192,16 @@ function addRowToTable(expense, parent) {
     parent.appendChild(tr);
 }
 
+function parseYMD(dateStr) {
+    return new Date(dateStr + "T00:00:00");
+}
+
 function getMonthDiff(expenseDate) {
-    const thisYear = today.getFullYear();
-    const thisMonth = today.getMonth();
-    const monthDiff = (thisYear - expenseYear) * 12 + (thisMonth - expenseMonth);
     const expenseYear = expenseDate.getFullYear();
     const expenseMonth = expenseDate.getMonth();
-    return monthDiff;
+    const thisYear = today.getFullYear();
+    const thisMonth = today.getMonth();
+    return (thisYear - expenseYear) * 12 + (thisMonth - expenseMonth);
 }
 
 function getTargetTable(monthDiff) {
@@ -215,4 +209,66 @@ function getTargetTable(monthDiff) {
     if (monthDiff === 1) return tables.lastMonth;
     if (monthDiff === 2) return tables.twoMonthsAgo;
     return tables.archive;
+}
+
+function validation(form) {
+    const item = itemInput.value.trim();
+    const amount = parseFloat(amountInput.value);
+    const dateInput = dateInputElement.value;
+
+    // Validate amount
+    if (isNaN(amount) || amount <= 0) amountInput.setCustomValidity("invalid");
+    else amountInput.setCustomValidity("");
+
+    // Validate item
+    if (!item) itemInput.setCustomValidity("invalid");
+    else itemInput.setCustomValidity("");
+
+    // Validate date (monthDiff >= 0)
+    const selectedDate = parseYMD(dateInput);
+    const monthDiff = getMonthDiff(selectedDate);
+    if (monthDiff < 0) dateInputElement.setCustomValidity("invalid");
+    else dateInputElement.setCustomValidity("");
+
+    // Trigger Bootstrap validation
+    form.classList.add("was-validated");
+}
+
+async function insertRow(newExpense){
+    let table = getTargetTable(getMonthDiff(parseYMD(newExpense.date)));
+    let rowNumber = await insertSearch(newExpense, table);
+}
+
+async function insertSearch(newExpense, table) {
+    const expenseDateObj = new Date(newExpense.date + "T00:00:00");
+    const expenseDate = expenseDateObj.getTime();
+    const time = newExpense.createdAt.toDate ? newExpense.createdAt.toDate().getTime() : newExpense.createdAt.getTime();
+    let rows = [...Array.from(table.querySelectorAll('tr'))];
+    let left = 0;
+    let right = rows.length - 1;
+    let insertIndex = rows.length; 
+    let rowDate;
+    let rowTime;
+    let mid;
+    while (left <= right) {
+        mid = Math.floor((left + right)/2);
+        rowDate = rows[mid].dataset.date;
+        const midDateObj = new Date(rowDate + "T00:00:00");
+        const midDate = midDateObj.getTime();
+        if (expenseDate < midDate) {
+            left = mid + 1;
+        } else if (expenseDate > midDate) {
+            insertIndex = mid;
+            right = mid - 1;
+        } else {
+            if (time < rowTime) {
+                left = mid + 1;
+            } else {
+                insertIndex = mid;
+                right = mid - 1;
+            }
+        }
+    }
+
+    return insertIndex;
 }
