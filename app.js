@@ -34,12 +34,12 @@ document.getElementById("date").setAttribute("value", dateChange());
 
 // Wait for auth state to load
 onAuthStateChanged(auth, async (user) => {
+    console.log("Auth state fired:", user);
     if (!user) {
         redirect("/login.html", "/login")
         return;
     }
     
-
     tableHead();
     //fetch data from firebase
     const uid = user.uid;
@@ -73,7 +73,7 @@ onAuthStateChanged(auth, async (user) => {
             createdAt: new Date()
         };
 
-
+        await insertRow(newExpense);
 
         // Clear form
         form.reset();
@@ -111,7 +111,7 @@ function tableHead() {
     thisMonthTableHead.innerHTML = `${letterMonth}, ${year}`;
     archiveTableHead.innerHTML = "Archive";
     const tableHeads = [lastMonthTableHead, twoMonthsAgoTableHead];
-    for (let i in tableHeads) {
+    for (let i = 0; i < tableHeads.length; i++) {
         let currentTableHead = tableHeads[i];
         dateMonth -= 1;
         if (dateMonth < 0) {
@@ -237,6 +237,22 @@ function validation(form) {
 async function insertRow(newExpense){
     let table = getTargetTable(getMonthDiff(parseYMD(newExpense.date)));
     let rowNumber = await insertSearch(newExpense, table);
+    const tr = document.createElement("tr");
+    const formattedDate = new Date(newExpense.date + "T00:00:00").toLocaleDateString("en-US");
+    tr.innerHTML = `
+        <th scope="row">${rowNumber + 1}</th>
+        <td>${newExpense.item}</td>
+        <td>${newExpense.amount.toFixed(2)}</td>
+        <td>${formattedDate}</td>
+    `;
+    if (rowNumber < table.children.length) {
+        table.insertBefore(tr, table.children[rowNumber]);
+    } else {
+        table.appendChild(tr);
+    }
+    for (let i = rowNumber; i < table.children.length; i++) {
+        table.children[i].querySelector("th").textContent = i + 1;
+    }
 }
 
 async function insertSearch(newExpense, table) {
@@ -253,6 +269,7 @@ async function insertSearch(newExpense, table) {
     while (left <= right) {
         mid = Math.floor((left + right)/2);
         rowDate = rows[mid].dataset.date;
+        rowTime = Number(rows[mid].dataset.time) || "0";
         const midDateObj = new Date(rowDate + "T00:00:00");
         const midDate = midDateObj.getTime();
         if (expenseDate < midDate) {
