@@ -39,10 +39,10 @@ onAuthStateChanged(auth, (user) => {
 resendBtn.addEventListener("click", async () => {
   try {
     resendBtn.disabled = true;
-    cooldown = 30;
+    let cooldown = 30;
 
     showStatus("Verification email sent. Check your inbox.", "info");
-    startCooldown();
+    startCooldown(cooldown);
 
     await sendEmailVerification(auth.currentUser);
   } catch (err) {
@@ -52,7 +52,7 @@ resendBtn.addEventListener("click", async () => {
   }
 });
 
-function startCooldown() {
+function startCooldown(cooldown) {
   updateButtonText();
 
   cooldownInterval = setInterval(() => {
