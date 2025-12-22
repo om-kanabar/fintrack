@@ -5,12 +5,12 @@
     <title>Login</title>
     <meta http-equiv="Content-Security-Policy" content="
         default-src 'self';
-        script-src 'self' https://www.gstatic.com https://www.googleapis.com https://cdn.jsdelivr.net 'unsafe-inline';
+        script-src 'self' https://www.gstatic.com https://www.googleapis.com https://apis.google.com https://cdn.jsdelivr.net 'unsafe-inline';
         connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.gstatic.com https://firestore.googleapis.com https://cdn.jsdelivr.net;
         style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com;
         font-src 'self' https://fonts.gstatic.com data:;
         img-src 'self' data:;
-        frame-src https://*.firebaseapp.com https://*.google.com;
+        frame-src https://*.firebaseapp.com https://accounts.google.com https://apis.google.com;
     ">
     <script async>
         const hostname = window.location.hostname;
@@ -30,6 +30,7 @@
 <body>
     <h1 class="text-center mt-5">Login</h1>
     <p class="text-center mb-4"><a href="/signup.html">Signup</a></p>
+    <div id="alert-container"></div>
     <div class="form-box">
         <form id="login-form" novalidate>
             <div class="mb-3">
@@ -41,8 +42,8 @@
                 <label for="Password" class="form-label">Password<span class="required">*</span></label>
                 <input type="password" id="Password" class="form-control" required>
             </div>
-                        <div class="party-signups mb-3 mt-3">
-                <button class="gsi-material-button" id="google-login-btn" style="width:400">
+            <div class="party-signups mb-3 mt-3">
+                <button type="button" class="gsi-material-button" id="google-login-btn" style="width:400">
                     <div class="gsi-material-button-state"></div>
                     <div class="gsi-material-button-content-wrapper">
                         <div class="gsi-material-button-icon">

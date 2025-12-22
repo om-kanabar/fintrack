@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
 import { getFirestore, collection, getDocs, serverTimestamp, addDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
 // Firebase project config
@@ -49,6 +49,7 @@ onAuthStateChanged(auth, async (user) => {
     let expenses = await fetchData(uid);
     let sortExpenses = await sortData(expenses);
     await fillData(sortExpenses);
+    signOutUser();
 
     const form = document.getElementById("item-form");
 
@@ -338,3 +339,25 @@ async function insertSearch(newExpense, table) {
     return insertIndex;
 }
 
+async function signOutUser() {
+    const signOutButton = document.getElementById("signout-button");
+    signOutButton.addEventListener("click", async (event) => {
+        try {
+            await signOut(auth);
+            redirect("/index.html", "/")
+        } catch(error) {
+            console.error("Sign out failed: ", error);
+        }
+    });   
+}
+
+function showBootstrapAlert(message, type = "danger") {
+    const container = document.getElementById("alert-container");
+    if (!container) return;
+    container.innerHTML = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    `;
+}

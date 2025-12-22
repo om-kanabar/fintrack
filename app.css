@@ -33,3 +33,13 @@
 .delete-button:hover {
     color: rgb(132, 28, 28);
 }
+
+.profile {
+    color: #144473;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.profile:hover {
+    color: #001f3f;
+}
