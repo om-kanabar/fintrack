@@ -19,3 +19,17 @@
 .hidden{
     display: none !important;
 }
+
+.highlight {
+  background-color: rgba(0, 123, 255, 0.3) !important;
+  transition: 1.5s ease;
+}
+
+.delete-button {
+    color: rgb(211, 39, 39);
+    transition: 0.2s ease;
+}
+
+.delete-button:hover {
+    color: rgb(132, 28, 28);
+}

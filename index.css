@@ -1,0 +1,33 @@
+.hero {
+    width: 100vw;
+}
+
+.hero h1 {
+    font-size: 5em;
+    text-align: center;
+    font-family: Montserrat, 'sans-serif';
+    font-weight: 700;
+    color: #001f33;
+}
+
+.p-box {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.hero p {
+    text-align: center;
+    font-size: 1.5em;
+    color: rgb(37, 37, 37);
+    width: 66vw;
+}
+
+footer div .disabled {
+    color: rgb(67, 67, 67);
+}
+
+footer div .disabled:hover {
+    color: rgb(67, 67, 67) !important;
+}

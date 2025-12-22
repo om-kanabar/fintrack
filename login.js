@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyD4LF3rVTE4jKzf5lh6UII8SlsifRd2GEw",
@@ -14,6 +14,16 @@ const firebaseConfig = {
 const form = document.getElementById("login-form");
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+
+const urlParams = new URLSearchParams(window.location.search);
+const skipRedirect = urlParams.get("debug") === "skip";
+
+onAuthStateChanged(auth, (user) => {
+    if (user && !skipRedirect) {
+        redirect("/app.html", "/app");
+    }
+});
+
 
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -52,3 +62,12 @@ form.addEventListener("submit", async (e) => {
         passwordInput.classList.add("is-invalid");
     }
 });
+
+function redirect(locallink, weblink) {
+    const hostname = window.location.hostname;
+    if (hostname === "127.0.0.1" || hostname === "localhost") {
+        window.location.href = locallink;
+    } else {
+        window.location.href = weblink;
+    }
+}

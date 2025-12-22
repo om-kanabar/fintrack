@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
-import { getFirestore, collection, getDocs, serverTimestamp, addDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, serverTimestamp, addDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
 // Firebase project config
 const firebaseConfig = {
@@ -34,9 +34,12 @@ document.getElementById("date").setAttribute("value", dateChange());
 
 // Wait for auth state to load
 onAuthStateChanged(auth, async (user) => {
-    console.log("Auth state fired:", user);
     if (!user) {
-        redirect("/login.html", "/login")
+        redirect("/signup.html", "/signup");
+        return;
+    }
+    if (!auth.currentUser.emailVerified) {
+        redirect("/verify.html", "/verify");
         return;
     }
     
@@ -59,14 +62,18 @@ onAuthStateChanged(auth, async (user) => {
         if (!form.checkValidity()) return;
 
         // Add expense to Firestore
-        await addDoc(collection(db, "users", auth.currentUser.uid, "expenses"), {
-            item,
-            amount,
-            date: dateInput,
-            createdAt: serverTimestamp()
-        });
+        const docRef = await addDoc(
+            collection(db, "users", auth.currentUser.uid, "expenses"),
+            {
+                item,
+                amount,
+                date: dateInput,
+                createdAt: serverTimestamp()
+            }
+        );
 
         const newExpense = {
+            id: docRef.id,
             item,
             amount,
             date: dateInput,
@@ -74,6 +81,8 @@ onAuthStateChanged(auth, async (user) => {
         };
 
         await insertRow(newExpense);
+
+        window.location.hash = docRef.id;
 
         // Clear form
         form.reset();
@@ -181,15 +190,32 @@ function addRowToTable(expense, parent) {
     tr.setAttribute("data-time", timestamp.toString());
     tr.setAttribute("id", data.id);
     const date = data.date
-    ? new Date(data.date + "T00:00:00").toLocaleDateString("en-US")
-    : "";
+        ? new Date(data.date + "T00:00:00").toLocaleDateString("en-US")
+        : "";
     tr.innerHTML = `
         <th scope="row">${parent.children.length + 1}</th>
         <td>${data.item}</td>
         <td>${data.amount.toFixed(2)}</td>
         <td>${date}</td>
+        <td>
+            <button class="btn btn-sm btn-outline-danger delete-btn" title="Delete expense">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                </svg>
+            </button>
+        </td>
     `;
     parent.appendChild(tr);
+    tr.querySelector(".delete-btn").addEventListener("click", async () => {
+        if (!confirm("Are you sure you want to delete this expense?")) return;
+        await deleteDoc(doc(db, "users", auth.currentUser.uid, "expenses", data.id));
+        tr.remove();
+        // Update row numbers
+        for (let i = 0; i < parent.children.length; i++) {
+            parent.children[i].querySelector("th").textContent = i + 1;
+        }
+    });
 }
 
 function parseYMD(dateStr) {
@@ -238,21 +264,43 @@ async function insertRow(newExpense){
     let table = getTargetTable(getMonthDiff(parseYMD(newExpense.date)));
     let rowNumber = await insertSearch(newExpense, table);
     const tr = document.createElement("tr");
+    tr.setAttribute("id", newExpense.id);
     const formattedDate = new Date(newExpense.date + "T00:00:00").toLocaleDateString("en-US");
     tr.innerHTML = `
         <th scope="row">${rowNumber + 1}</th>
         <td>${newExpense.item}</td>
         <td>${newExpense.amount.toFixed(2)}</td>
         <td>${formattedDate}</td>
+        <td>
+            <button class="btn btn-sm btn-outline-danger delete-btn" title="Delete expense">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                </svg>
+            </button>
+        </td>
     `;
     if (rowNumber < table.children.length) {
         table.insertBefore(tr, table.children[rowNumber]);
     } else {
         table.appendChild(tr);
     }
+    tr.classList.add("table-active");
+    tr.querySelector(".delete-btn").addEventListener("click", async () => {
+        if (!confirm("Are you sure you want to delete this expense?")) return;
+        await deleteDoc(doc(db, "users", auth.currentUser.uid, "expenses", newExpense.id));
+        tr.remove();
+        // Update row numbers
+        for (let i = 0; i < table.children.length; i++) {
+            table.children[i].querySelector("th").textContent = i + 1;
+        }
+    });
     for (let i = rowNumber; i < table.children.length; i++) {
         table.children[i].querySelector("th").textContent = i + 1;
     }
+    setTimeout(() => {
+        tr.classList.remove("table-active");
+    }, 2500);
 }
 
 async function insertSearch(newExpense, table) {
@@ -289,3 +337,4 @@ async function insertSearch(newExpense, table) {
 
     return insertIndex;
 }
+
