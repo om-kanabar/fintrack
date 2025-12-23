@@ -1,11 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-import { 
-    getAuth, 
-    signInWithEmailAndPassword, 
-    onAuthStateChanged, 
-    signInWithPopup, 
-    GoogleAuthProvider 
-} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, setPersistence, browserLocalPersistence, browserSessionPersistence, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
 
 // Firebase setup
 const firebaseConfig = {
@@ -82,6 +76,8 @@ form.addEventListener("submit", async (e) => {
 
     if (!emailValid || !passwordValid) return;
 
+    await rememberUser();
+
     try {
         await signInWithEmailAndPassword(auth, emailInput.value.trim(), passwordInput.value);
     } catch (err) {
@@ -92,10 +88,16 @@ form.addEventListener("submit", async (e) => {
     }
 });
 
+async function rememberUser() {
+    const rememberMe = document.getElementById("rememberMe").checked;
+    await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
+}
+
 // Google login
 const googleBtn = document.getElementById("google-login-btn");
 googleBtn.addEventListener("click", async () => {
     try {
+        await setPersistence(auth, browserLocalPersistence);
         await signInWithPopup(auth, provider);
     } catch (err) {
         showBootstrapAlert(`Google login failed: ${err.message}`, "danger");
