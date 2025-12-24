@@ -64,7 +64,8 @@ function validatePassword(passwordInput, confirmInput) {
     const rules =
         password.length >= 8 &&
         password.length <= 20 &&
-        /[a-zA-Z]/.test(password) &&
+        /[a-z]/.test(password) &&
+        /[A-Z]/.test(password) &&
         /[0-9]/.test(password) &&
         /[^a-zA-Z0-9]/.test(password) &&
         !/\s/.test(password) &&

@@ -122,3 +122,7 @@ section {
     background-color: #303030;
     opacity: 8%;
 }
+
+.hidden {
+    display: none !important;
+}
