@@ -116,6 +116,10 @@ async function reAuthWithGoogle(user) {
         return true;
     } catch (error) {
         console.error("Reauthentication failed:", error);
+        if (error = "FirebaseError: Firebase: Error (auth/user-mismatch).") {
+            showBootstrapAlert(`Please use the google account `);
+            return false;    
+        }
         showBootstrapAlert(`An error has occured with reauthentication. Please contact the dev at https://omkanabar.com/contact, give instructions on how to replicate the error, and paste the following error code: ${error}`);
         return false;
     }

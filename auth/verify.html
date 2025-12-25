@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinTrack Verify</title>
+  <script async>
+    const hostname = window.location.hostname;
+    if (hostname === "127.0.0.1" || hostname === "localhost") {
+    } else {
+      if (window.location.href == "https://fintrack.omkanabar.com/auth/verify.html") {
+          window.location.href = "https://fintrack.omkanabar.com/auth/verify";
+      }
+    }
+  </script>
+  <script type="module" src="./js/verify-email.js" defer></script>
+  <link rel="icon" href="Assets/favicon.svg" type="svg">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <style>
+  body {
+      background-color: #fefcf7;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <div class="container min-vh-100 d-flex align-items-center">
+    <div class="w-100" style="max-width: 480px; margin: auto;">
+      
+      <h1 class="fw-bold mb-3">Verify your email</h1>
+
+      <p class="text-muted">We've sent a verification link to your email address. Please verify your email to continue to Fintrack.</p>
+
+      <!-- Status message (controlled by JS) -->
+      <div id="statusMessage" class="alert alert-info mt-4 d-none" role="alert"></div>
+
+      <!-- Resend button -->
+      <button
+        id="resendEmailBtn"
+        class="btn btn-primary w-100 mt-3"
+      >
+        Resend verification email
+      </button>
+
+      <p class="text-muted text-center mt-4 small">
+        Once verified, you'll be redirected automatically.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
