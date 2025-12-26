@@ -3,6 +3,12 @@ body{
   background-color: #fefcf7;
 }
 
+.gr-width {
+    width: 73.81978919%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .form-box{
   width: 100vw;
   margin-top: 10vh;
