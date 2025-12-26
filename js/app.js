@@ -35,11 +35,11 @@ document.getElementById("date").setAttribute("value", dateChange());
 // Wait for auth state to load
 onAuthStateChanged(auth, async (user) => {
     if (!user) {
-        redirect("/signup.html", "/signup");
+        redirect("/auth/signup.html", "/auth/signup");
         return;
     }
     if (!auth.currentUser.emailVerified) {
-        redirect("/verify.html", "/verify");
+        redirect("/auth/verify.html", "/auth/verify");
         return;
     }
     
