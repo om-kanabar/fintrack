@@ -5,7 +5,7 @@ import {getAuth, createUserWithEmailAndPassword, onAuthStateChanged, sendEmailVe
 
 const firebaseConfig = {
     apiKey: "AIzaSyD4LF3rVTE4jKzf5lh6UII8SlsifRd2GEw",
-    authDomain: "fintrack-ec50a.firebaseapp.com",
+    authDomain: "fintrack.omkanabar.com",
     projectId: "fintrack-ec50a",
     storageBucket: "fintrack-ec50a.firebasestorage.app",
     messagingSenderId: "1286389410",

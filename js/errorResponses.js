@@ -31,7 +31,7 @@ export function giveError(error, container = "container") {
     showBootstrapAlert(message, type, container);
 }
 
-function showBootstrapAlert(message, type = "danger", box = "container") {
+export function showBootstrapAlert(message, type = "danger", box = "container") {
     const container = document.getElementById(`alert-${box}`);
     if (!container) return;
     container.innerHTML = `

@@ -13,12 +13,15 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, updatePassword, GoogleAuthProvider, reauthenticateWithPopup, reauthenticateWithCredential, EmailAuthProvider, deleteUser, signOut } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
 
-// Firestore (future use / parity with other files)
-import { getFirestore } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+// Firestore
+import { getFirestore, collection, getDocs, query, where, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
 // Global error handler
 import { giveError } from "./errorResponses.js";
 
+// Verification
+
+import { verification } from "./verification.js";
 
 
 // =====================================================
@@ -28,7 +31,7 @@ import { giveError } from "./errorResponses.js";
 // Firebase configuration object containing keys and identifiers for the project
 const firebaseConfig = {
     apiKey: "AIzaSyD4LF3rVTE4jKzf5lh6UII8SlsifRd2GEw",
-    authDomain: "fintrack-ec50a.firebaseapp.com",
+    authDomain: "fintrack.omkanabar.com",
     projectId: "fintrack-ec50a",
     storageBucket: "fintrack-ec50a.firebasestorage.app",
     messagingSenderId: "1286389410",
@@ -76,10 +79,8 @@ onAuthStateChanged(auth, async (user) => {
     setupChangePasswordForm(user)
 });
 
-
-
 // =====================================================
-// 4. ACCOUNT / AUTH ACTIONS (Firebase mutations)
+// 4. ACCOUNT / AUTH ACTIONS 
 // =====================================================
 
 // Adds a password to the user's account after successful reauthentication
@@ -120,131 +121,45 @@ async function setupSignOut() {
     });
 }
 
+async function deleteUserData(user) {
+    try {
+        const userDocRef = doc(db, "Users", user.uid);
+
+        // Get the expenses subcollection
+        const expensesRef = collection(userDocRef, "expenses");
+        const snapshot = await getDocs(expensesRef);
+
+        // Delete each expense
+        const deletePromises = snapshot.docs.map(expenseDoc => deleteDoc(expenseDoc.ref));
+        await Promise.all(deletePromises);
+
+        // Delete the user document itself
+        await deleteDoc(userDocRef);
+
+        showBootstrapAlert("All user data deleted from Firestore", "success");
+    } catch (error) {
+        giveError(error);
+    }
+}
+
+async function deleteAuthUser(user) {
+    try {
+        await deleteUser(user);
+        await pause(2000)
+        showBootstrapAlert("Your account and all data have been deleted.", "success");
+        await pause(2000)
+        redirect("/index.html", "/");
+    } catch (error) {
+        giveError(error);
+    }
+}
 
 
 // =====================================================
 // 5. VERIFICATION LOGIC 
 // =====================================================
 
-// General verification function that selects verification method based on level
-// Parameters:
-// - user: Firebase user object
-// - level: string indicating verification level ("easy", "medium", "hard", "sudo")
-// Returns a Promise that resolves to true if verification succeeds
-async function verification(user, level) {
-    const levels = ["easy", "medium", "hard", "sudo"];
-    if (!levels.includes(level)) return;
-    switch (level) {
-        case "easy":
-            return await easyVerify(user);
-        default:
-            throw new Error("Unsupported verification level");
-    }
-}
-
-// -------- EASY VERIFY --------
-// Re-authenticate user either via password or Google popup
-// Displays a modal dialog for user input and handles verification
-// Returns a Promise that resolves to true on successful reauthentication
-async function easyVerify(user) {
-    return new Promise((resolve) => {
-        const modalEl = document.getElementById("verifyPasswordModal");
-        const modal = new bootstrap.Modal(modalEl, {
-            backdrop: "static",
-            keyboard: false
-        });
-
-        const hasPassword = userHasPassword(user);
-
-        // Correctly toggle UI
-        toggleEasyVerifyUI(hasPassword);
-
-        modal.show();
-
-        modalEl.addEventListener(
-            "shown.bs.modal",
-            () => {
-                const input = document.getElementById("verifyPasswordInput");
-                if (input) input.focus();
-            },
-            { once: true }
-        );
-
-        const form = document.getElementById("verifyPasswordForm");
-        const googleBtn = document.getElementById("verifyWithGoogleBtn");
-
-        // -------- PASSWORD REAUTH --------
-        async function handlePasswordSubmit(e) {
-            e.preventDefault();
-
-            const input = document.getElementById("verifyPasswordInput");
-            const password = input.value.trim();
-
-            input.classList.remove("is-invalid");
-
-            if (!password) {
-                input.classList.add("is-invalid");
-                return;
-            }
-
-            try {
-                const credential = EmailAuthProvider.credential(
-                    user.email,
-                    password
-                );
-
-                await reauthenticateWithCredential(user, credential);
-                cleanup(true);
-            } catch (error) {
-                input.classList.add("is-invalid");
-                giveError(error, "modal");
-            }
-        }
-
-        // -------- GOOGLE REAUTH --------
-
-        async function handleGoogleReauth(user) {
-            try {
-                const provider = new GoogleAuthProvider();
-                await reauthenticateWithPopup(user, provider);
-                cleanup(true);
-            } catch (error) {
-                giveError(error, "modal");
-            }
-        }
-
-        function cleanup(success) {
-            document.getElementById("verifyPasswordInput").value = "";
-            modal.hide();
-            form?.removeEventListener("submit", handlePasswordSubmit);
-            googleBtn?.removeEventListener("click", handleGoogleReauth);
-            resolve(success);
-        }
-
-        // Always attach Google reauth
-        const googleClickHandler = () => handleGoogleReauth(user);
-        googleBtn?.addEventListener("click", googleClickHandler);
-
-        // Only attach password form listener if user has a password
-        if (hasPassword) {
-            form?.addEventListener("submit", handlePasswordSubmit);
-        }
-    });
-}
-
-// Shows or hides password input and submit button based on whether user has a password
-// Parameters:
-// - hasPassword: boolean indicating if user has a password set
-function toggleEasyVerifyUI(hasPassword) {
-    if (hasPassword) {
-        showElement("passwordBlock");
-        showElement("verifyPasswordSubmitBtn");
-    } else {
-        hideElement("passwordBlock");
-        hideElement("verifyPasswordSubmitBtn");
-    }
-}
-
+// I imported this but I don't feel like changing the numbers rn
 
 
 // =====================================================
@@ -303,12 +218,6 @@ function setupChangePasswordForm(user) {
             showBootstrapAlert( "Your new password must be different from your current password.", "warning");
             return;
         }
-
-        await updatePassword(user, newPasswordInput.value);
-        showBootstrapAlert("Password changed successfully!", "success");
-
-        await updatePassword(user, newPasswordInput.value);
-        showBootstrapAlert("Password changed successfully!", "success");
 
         // Update the password in Firebase
         await updatePassword(user, newPasswordInput.value);
@@ -416,15 +325,6 @@ function validatePassword(passwordInput, confirmInput) {
 }
 
 
-// Removes validation classes from given input elements
-// Parameters:
-// - inputs: array of input elements
-function resetValidation(inputs) {
-    inputs.forEach(i => i.classList.remove("is-invalid", "is-valid"));
-}
-
-
-
 // =====================================================
 // 9. SMALL HELPERS
 // =====================================================
@@ -492,4 +392,22 @@ function redirect(local, web) {
     const host = window.location.hostname;
     window.location.href =
         host === "127.0.0.1" || host === "localhost" ? local : web;
+}
+
+// Pauses the function for x ms
+async function pause(ms) {return new Promise(resolve => setTimeout(resolve, ms))};
+
+// For SUDO to make sure that it can't be done accidentally. This is a one time intent token, not a replacement for firebase auth
+
+function generateSecureToken(bytes = 64) {
+    const array = new Uint8Array(bytes);
+    crypto.getRandomValues(array);
+    return Array.from(array, b => b.toString(16).padStart(2, "0")).join("");
+}
+
+// Removes validation classes from given input elements
+// Parameters:
+// - inputs: array of input elements
+function resetValidation(inputs) {
+    inputs.forEach(i => i.classList.remove("is-invalid", "is-valid"));
 }
