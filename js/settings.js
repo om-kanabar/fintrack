@@ -411,3 +411,4 @@ function generateSecureToken(bytes = 64) {
 function resetValidation(inputs) {
     inputs.forEach(i => i.classList.remove("is-invalid", "is-valid"));
 }
+

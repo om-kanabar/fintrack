@@ -51,12 +51,7 @@ resendBtn.addEventListener("click", async () => {
         showStatus("Verification email sent. Check your inbox.", "info");
         startCooldown(30);
 
-        const actionCodeSettings = {
-            url: `${window.location.origin}/app`, // redirect after verification
-            handleCodeInApp: true
-        };
-
-        await sendEmailVerification(auth.currentUser, actionCodeSettings);
+        await sendEmailVerification(auth.currentUser);
     } catch (err) {
         console.error(err);
         showStatus(err.message, "danger");
