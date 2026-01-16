@@ -4,7 +4,7 @@ import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, setPe
 // Firebase setup
 const firebaseConfig = {
     apiKey: "AIzaSyD4LF3rVTE4jKzf5lh6UII8SlsifRd2GEw",
-    authDomain: "fintrack.omkanabar.com",
+    authDomain: "fintrack-ec50a.firebaseapp.com",
     projectId: "fintrack-ec50a",
     storageBucket: "fintrack-ec50a.firebasestorage.app",
     messagingSenderId: "1286389410",
